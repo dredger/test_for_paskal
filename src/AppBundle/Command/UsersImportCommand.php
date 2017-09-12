@@ -2,6 +2,8 @@
 // src/AppBundle/Command/UsersImportCommand.php
 namespace AppBundle\Command;
 
+ini_set("memory_limit", "56M");
+
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -61,8 +63,10 @@ class UsersImportCommand extends ContainerAwareCommand
             $u = $this->lineToEntity($line);
             $em ->persist($u);
 
+            unset($u);
 
-            if($i==100){
+
+            if($i==200){
                 $n = $n+1;
                 $output->writeln("Start Saving operation number $n  ");
                 $em ->flush();
@@ -72,6 +76,8 @@ class UsersImportCommand extends ContainerAwareCommand
             }
 
         }
+        $em ->flush();
+        $em ->clear();
         fclose($file);
 
         $output->writeln($text);
