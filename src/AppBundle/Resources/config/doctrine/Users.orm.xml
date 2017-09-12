@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Users" table="users">
+    <indexes>
+      <index name="f_name" columns="f_name"/>
+      <index name="l_name" columns="l_name"/>
+      <index name="b_day" columns="b_day"/>
+      <index name="email" columns="email"/>
+      <index name="company" columns="company"/>
+      <index name="w_address" columns="w_adress"/>
+      <index name="position" columns="position"/>
+    </indexes>
+    <id name="id" type="bigint" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fName" type="string" column="f_name" length="50" nullable="true"/>
+    <field name="lName" type="string" column="l_name" length="50" nullable="true"/>
+    <field name="bDay" type="date" column="b_day" nullable="true"/>
+    <field name="email" type="string" column="email" length="100" nullable="true"/>
+    <field name="hCity" type="string" column="h_city" length="250" nullable="true"/>
+    <field name="hZip" type="string" column="h_zip" length="250" nullable="true"/>
+    <field name="hAddress" type="string" column="h_address" length="250" nullable="true"/>
+    <field name="phone" type="string" column="phone" length="250" nullable="true"/>
+    <field name="company" type="string" column="company" length="250" nullable="true"/>
+    <field name="wCity" type="string" column="w_city" length="250" nullable="true"/>
+    <field name="wAdress" type="string" column="w_adress" length="250" nullable="true"/>
+    <field name="position" type="string" column="position" length="250" nullable="true"/>
+    <field name="cv" type="text" column="cv" length="65535" nullable="true"/>
+  </entity>
+</doctrine-mapping>

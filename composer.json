@@ -23,9 +23,9 @@
         "symfony/swiftmailer-bundle": "~2.3,>=2.3.10",
         "symfony/symfony": "2.8.*",
         "twig/twig": "^1.0||^2.0",
-        "symfony/assetic-bundle": "2.1.*",
-        "leafo/lessphp": "*",
-        "twitter/bootstrap": "*"
+        "braincrafted/bootstrap-bundle": "dev-master",
+        "twbs/bootstrap": "3.0.*",
+        "jquery/jquery":  "1.11.*"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
@@ -64,5 +64,18 @@
         "branch-alias": {
             "dev-master": "2.8-dev"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "jquery/jquery",
+                "version": "1.11.1",
+                "dist": {
+                    "url": "https://code.jquery.com/jquery-1.11.1.js",
+                    "type": "file"
+                }
+            }
+        }
+    ]
 }
