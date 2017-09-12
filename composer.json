@@ -64,18 +64,5 @@
         "branch-alias": {
             "dev-master": "2.8-dev"
         }
-    },
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "jquery/jquery",
-                "version": "1.11.1",
-                "dist": {
-                    "url": "https://code.jquery.com/jquery-1.11.1.js",
-                    "type": "file"
-                }
-            }
-        }
-    ]
+    }
 }

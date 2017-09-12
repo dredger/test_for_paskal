@@ -1,8 +1,7 @@
 Command interface 
 ========================
- php app/console users:import /path/to/file.csv
- 
-  php app/console users:import /data/www/andrew/hexagon/docs/users.csv
+php app/console users:import /path/to/file.csv 
+php app/console users:import /home/a.dulev/test_paskal/docs/users.csv
  
 
 

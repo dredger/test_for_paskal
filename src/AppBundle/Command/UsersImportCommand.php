@@ -28,24 +28,15 @@ class UsersImportCommand extends ContainerAwareCommand
     {
         $file = $input->getArgument('file');
         if ($file) {
-            $text = 'File  '.$file;
+            $text = 'Start processing the File  '.$file;
         } else {
             $text = 'File name is Empty';
             $output->writeln($text);
             return;
         }
 
-
-        $u = new \AppBundle\Entity\Users();
-        $u->setFName("ss");
-
 //        $entityManager = $this->getContainer()->get('doctrine')->getEntityManager();
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $em ->persist($u);
-//        $em ->flush();
-
-        return;
-
 
         if(!file_exists($file)){
             $text = 'File has not been found by path: ' . $file;
@@ -55,12 +46,62 @@ class UsersImportCommand extends ContainerAwareCommand
 
 
         $file = fopen($file, 'r');
+        $i= 0;
+        $n = 0;
         while (($line = fgetcsv($file)) !== FALSE) {
-            //$line[0] = '1004000018' in first iteration
-            print_r($line);
+
+//            print_r($line);
+            if($i == 0){
+                $i++;
+                continue;
+            }
+
+            $i++;
+
+            $u = $this->lineToEntity($line);
+            $em ->persist($u);
+
+
+            if($i==100){
+                $n = $n+1;
+                $output->writeln("Start Saving operation number $n  ");
+                $em ->flush();
+                $em ->clear();
+                $i = 1;
+                $output->writeln("Finish Saving operation number $n  ");
+            }
+
         }
         fclose($file);
 
         $output->writeln($text);
+    }
+
+    /**
+     * @param string $line
+     * @return \AppBundle\Entity\Users
+     */
+    public function lineToEntity($line)
+    {
+        $arr = explode(";", $line[0]);
+
+//        var_dump($arr);
+
+        $u = new \AppBundle\Entity\Users();
+        $u->setFName($arr[0]);
+        $u->setLName($arr[1]);
+        $u->setBDay(new \DateTime($arr[2]));
+        $u->setEmail($arr[3]);
+        $u->setHCity($arr[4]);
+        $u->setHZip($arr[5]);
+        $u->setHAddress($arr[6]);
+        $u->setPhone($arr[7]);
+        $u->setCompany($arr[8]);
+        $u->setWCity($arr[9]);
+        $u->setWAdress($arr[10]);
+        $u->setPosition($arr[11]);
+        $u->setCv($arr[11]);
+
+        return $u;
     }
 }
