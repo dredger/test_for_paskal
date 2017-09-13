@@ -37,8 +37,8 @@ class UsersImportCommand extends ContainerAwareCommand
             return;
         }
 
-//        $entityManager = $this->getContainer()->get('doctrine')->getEntityManager();
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $em = $this->getContainer()->get('doctrine')->getEntityManager();
+//        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
         if(!file_exists($file)){
             $text = 'File has not been found by path: ' . $file;
@@ -46,10 +46,11 @@ class UsersImportCommand extends ContainerAwareCommand
             return ;
         }
 
-
+        $time  = time();
         $file = fopen($file, 'r');
         $i= 0;
         $n = 0;
+
         while (($line = fgetcsv($file)) !== FALSE) {
 
 //            print_r($line);
@@ -60,18 +61,31 @@ class UsersImportCommand extends ContainerAwareCommand
 
             $i++;
 
-            $u = $this->lineToEntity($line);
-            $em ->persist($u);
-
-            unset($u);
+//            $u = $this->lineToEntity($line);
+//            $em ->persist($u);
 
 
-            if($i==200){
+            $sql[] = $this->lineToInsert($line);
+
+
+
+
+            if( $i % 100 == 0){
                 $n = $n+1;
+
                 $output->writeln("Start Saving operation number $n  ");
-                $em ->flush();
+//                $em ->flush();
+//                $em ->clear();
+
+//                $stmt  =  $em->getConnection()->prepare(implode("; ", $sql));
+//                $stmt->execute();
+                $em->getConnection()->exec(implode("   ", $sql));
+                $sql = array();
                 $em ->clear();
-                $i = 1;
+
+//                unset($em);
+
+//                $em = $this->getContainer()->get('doctrine')->getEntityManager();
                 $output->writeln("Finish Saving operation number $n  ");
             }
 
@@ -80,7 +94,32 @@ class UsersImportCommand extends ContainerAwareCommand
         $em ->clear();
         fclose($file);
 
-        $output->writeln($text);
+        $tt = time() - $time;
+        $output->writeln("execution time  " . $tt);
+        $output->writeln("lines number   " . $i);
+    }
+
+
+    /**
+     * @param string $line
+     * @return \AppBundle\Entity\Users
+     */
+    private function lineToInsert($line){
+        $line[0] = addslashes($line[0]);
+        $arr = explode(";", $line[0]);
+
+        $date = date("d/m/Y", strtotime($arr[2]));
+
+
+        $arr = explode(";", $line[0]);
+
+        $ins = "INSERT INTO `users` 
+          (`f_name`, `l_name`, `b_day`, `email`, `h_city`, `h_zip`, `h_address`, `phone`, `company`, `w_city`, `w_adress`, `position`, `cv`) 
+      VALUES ('$arr[0]', '$arr[1]', '$arr[2]', '$arr[3]', '$arr[4]', 
+      '$arr[5]', '$arr[6]', '$arr[7]', '$arr[8]', '$arr[9]', '$arr[10]', '$arr[11]', '$arr[12]') ; ";
+
+        return $ins ;
+
     }
 
     /**
@@ -89,6 +128,9 @@ class UsersImportCommand extends ContainerAwareCommand
      */
     public function lineToEntity($line)
     {
+
+        $line[0] = addslashes($line[0]);
+
         $arr = explode(";", $line[0]);
 
 //        var_dump($arr);
